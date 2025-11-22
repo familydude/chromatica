@@ -230,7 +230,7 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradient-move-fast var(--contrast-speed, 2s) linear infinite;
+  animation: gradient-move-fast var(--contrast-speed, 2s) linear infinite alternate;
   font-style: italic;
   /* Since it's underscored/emphasis */
 }
