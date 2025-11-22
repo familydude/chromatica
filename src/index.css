@@ -1,0 +1,205 @@
+:root {
+  --bg-color: #000000;
+  --font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-size: 24px;
+  --line-height: 1.6;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: white;
+  font-family: var(--font-family);
+  overflow: hidden; /* App handles scrolling */
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+/* Controls */
+.controls {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 100;
+}
+
+.control-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* Editor Container */
+.editor-container {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+/* Overlay Method Layers */
+.editor-layer {
+  position: absolute;
+  top: 40px; /* Match container padding */
+  left: 20px; /* Match container padding */
+  right: 20px; /* Match container padding */
+  bottom: 40px; /* Match container padding */
+  width: calc(100% - 40px);
+  height: calc(100% - 80px);
+  
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  resize: none;
+  
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-y: auto; /* Scrollable */
+  overflow-x: hidden;
+}
+
+/* Hide scrollbar but allow scroll */
+.editor-layer::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.back-layer {
+  z-index: 1;
+  color: transparent; /* Text itself is transparent, gradient shows through background-clip */
+  pointer-events: none; /* Let clicks pass through to textarea */
+}
+
+.front-layer {
+  z-index: 2;
+  background: transparent;
+  color: transparent; /* Make text transparent so back layer shows */
+  caret-color: white; /* Cursor visible */
+}
+
+/* Animations */
+@keyframes gradient-cycle {
+  0% { background-image: linear-gradient(45deg, #9acd32, #ffff00); } /* Green-yellow */
+  20% { background-image: linear-gradient(45deg, #ffc0cb, #008080); } /* Pink-teal */
+  40% { background-image: linear-gradient(45deg, #800080, #ffa500); } /* Purple-orange */
+  60% { background-image: linear-gradient(45deg, #ff69b4, #00ff00); } /* Hot pink-lime */
+  80% { background-image: linear-gradient(45deg, #00ffff, #ff00ff); } /* Cyan-magenta */
+  100% { background-image: linear-gradient(45deg, #ffd700, #ee82ee); } /* Gold-violet */
+}
+
+/* We need a continuous animation. 
+   CSS gradients can't be transitioned smoothly with `transition` easily without background-position tricks or custom properties.
+   A better approach for smooth cycling colors is animating hue-rotate or using a large background size and moving it.
+   However, the user asked for specific pairs. 
+   To transition smoothly between specific pairs, we can use keyframes on background-image (not supported in all browsers smoothly) 
+   OR use a pseudo-element or custom properties.
+   
+   Let's try the custom property approach with @property if supported, or fallback to a simpler hue rotate if exact pairs are hard to smooth.
+   BUT, the user specified pairs. 
+   
+   Let's use a background-size animation with a long gradient containing all colors? 
+   Or just keyframes. Modern browsers handle background-image keyframes okay-ish, but it's often discrete.
+   
+   Better approach: Animate `--color-a` and `--color-b` custom properties?
+   No, let's stick to a simpler approximation that hits these notes.
+   
+   Actually, let's use a giant gradient and animate background-position.
+   Sequence: Green, Yellow, Pink, Teal, Purple, Orange, Hot Pink, Lime, Cyan, Magenta, Gold, Violet.
+   
+   Let's try keyframes with specific colors.
+*/
+
+@keyframes color-cycle {
+  0% { color: #9acd32; text-shadow: 0 0 5px #ffff00; }
+  /* ... this is hard for gradients. */
+}
+
+/* 
+   Best approach for smooth gradient transitions:
+   Use an animated background on the text element.
+*/
+
+.gradient-text {
+  background: linear-gradient(
+    120deg, 
+    #9acd32, #ffff00, 
+    #ffc0cb, #008080, 
+    #800080, #ffa500, 
+    #ff69b4, #00ff00, 
+    #00ffff, #ff00ff, 
+    #ffd700, #ee82ee,
+    #9acd32, #ffff00 /* Repeat start for loop */
+  );
+  background-size: 1200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-move 8s linear infinite;
+}
+
+@keyframes gradient-move {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* Contrast Text: Underscored
+   "different and contrasting gradient"
+   Let's use a reverse or complementary spectrum.
+*/
+.contrast-text {
+  background: linear-gradient(
+    120deg, 
+    #ffffff, #000000, /* Stark B&W? Or maybe just inverted colors? */
+    #ff0000, #0000ff
+  );
+  /* Let's make it something very distinct, maybe a rapid fire rainbow or just a cool blue/white */
+  background: linear-gradient(
+    120deg,
+    #ff0000, #ffffff, #0000ff
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-move-fast 2s linear infinite;
+  font-style: italic; /* Since it's underscored/emphasis */
+}
+
+@keyframes gradient-move-fast {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* Fix for invisible char to keep height correct */
+.invisible-char {
+  opacity: 0;
+}
