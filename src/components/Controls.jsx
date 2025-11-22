@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 
-const Controls = ({ text, setText }) => {
+const Controls = ({ text, setText, onSettingsClick }) => {
     const fileInputRef = useRef(null);
 
     const handleUpClick = () => {
@@ -39,6 +39,9 @@ const Controls = ({ text, setText }) => {
             </button>
             <button onClick={handleDownClick} className="control-btn" aria-label="Download">
                 Down
+            </button>
+            <button onClick={onSettingsClick} className="control-btn" aria-label="Settings">
+                Settings
             </button>
             <input
                 type="file"
