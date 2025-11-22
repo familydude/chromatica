@@ -1,51 +1,70 @@
 import React from 'react';
 
 const Settings = ({
-    mainSpeed,
-    setMainSpeed,
-    contrastSpeed,
-    setContrastSpeed,
-    onClose
+  mainSpeed,
+  setMainSpeed,
+  contrastSpeed,
+  setContrastSpeed,
+  mainFont,
+  setMainFont,
+  onClose
 }) => {
-    return (
-        <div className="settings-overlay">
-            <div className="settings-modal">
-                <h2>Settings</h2>
+  const fonts = ['Inter', 'Roboto', 'Merriweather', 'Courier New', 'Comic Sans MS'];
 
-                <div className="setting-group">
-                    <label>
-                        Main Cycle Speed: {mainSpeed}s
-                        <input
-                            type="range"
-                            min="1"
-                            max="20"
-                            step="0.5"
-                            value={mainSpeed}
-                            onChange={(e) => setMainSpeed(Number(e.target.value))}
-                        />
-                    </label>
-                </div>
+  return (
+    <div className="settings-overlay">
+      <div className="settings-modal">
+        <h2>Settings</h2>
 
-                <div className="setting-group">
-                    <label>
-                        Emphasis Cycle Speed: {contrastSpeed}s
-                        <input
-                            type="range"
-                            min="0.1"
-                            max="5"
-                            step="0.1"
-                            value={contrastSpeed}
-                            onChange={(e) => setContrastSpeed(Number(e.target.value))}
-                        />
-                    </label>
-                </div>
+        <div className="setting-group">
+          <label>
+            Main Font:
+            <select
+              value={mainFont}
+              onChange={(e) => setMainFont(e.target.value)}
+              style={{ width: '100%', padding: '5px', marginTop: '5px', background: '#222', color: 'white', border: '1px solid #444' }}
+            >
+              {fonts.map(font => (
+                <option key={font} value={font}>{font}</option>
+              ))}
+            </select>
+          </label>
+        </div>
 
-                <button onClick={onClose} className="close-btn">
-                    Close
-                </button>
-            </div>
+        <div className="setting-group">
+          <label>
+            Main Cycle Speed: {mainSpeed}s
+            <input
+              type="range"
+              min="1"
+              max="60"
+              step="0.5"
+              value={mainSpeed}
+              onChange={(e) => setMainSpeed(Number(e.target.value))}
+            />
+          </label>
+        </div>
 
-            <style>{`
+        <div className="setting-group">
+          <label>
+            Emphasis Cycle Speed: {contrastSpeed}s
+            <input
+              type="range"
+              min="0.1"
+              max="30"
+              step="0.1"
+              value={contrastSpeed}
+              onChange={(e) => setContrastSpeed(Number(e.target.value))}
+            />
+          </label>
+        </div>
+
+        <button onClick={onClose} className="close-btn">
+          Close
+        </button>
+      </div>
+
+      <style>{`
         .settings-overlay {
           position: fixed;
           top: 0;
@@ -110,8 +129,8 @@ const Settings = ({
           background: #444;
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 };
 
 export default Settings;

@@ -9,10 +9,12 @@ function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [mainSpeed, setMainSpeed] = useState(8);
   const [contrastSpeed, setContrastSpeed] = useState(2);
+  const [mainFont, setMainFont] = useState('Inter');
 
   const containerStyle = {
     '--main-speed': `${mainSpeed}s`,
-    '--contrast-speed': `${contrastSpeed}s`
+    '--contrast-speed': `${contrastSpeed}s`,
+    '--font-family': mainFont
   };
 
   return (
@@ -29,6 +31,8 @@ function App() {
           setMainSpeed={setMainSpeed}
           contrastSpeed={contrastSpeed}
           setContrastSpeed={setContrastSpeed}
+          mainFont={mainFont}
+          setMainFont={setMainFont}
           onClose={() => setShowSettings(false)}
         />
       )}
